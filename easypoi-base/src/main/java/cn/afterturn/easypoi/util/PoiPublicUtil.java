@@ -232,19 +232,27 @@ public final class PoiPublicUtil {
      * @return
      */
     public static boolean isJavaClass(Field field) {
-        Class<?> fieldType   = field.getType();
-        boolean  isBaseClass = false;
-        if (fieldType.isArray()) {
-            isBaseClass = false;
-        } else if (fieldType.isPrimitive() || fieldType.getPackage() == null
-                || "java.lang".equals(fieldType.getPackage().getName())
-                || "java.math".equals(fieldType.getPackage().getName())
-                || "java.sql".equals(fieldType.getPackage().getName())
-                || "java.time".equals(fieldType.getPackage().getName())
-                || "java.util".equals(fieldType.getPackage().getName())) {
-            isBaseClass = true;
+        Class<?> fieldType = field.getType();
+        if(fieldType.isArray()){
+            Class<?> fieldComponentType = field.getType().getComponentType();
+            if (fieldType.isPrimitive() || fieldComponentType.getPackage() == null
+                    || "java.lang".equals(fieldComponentType.getPackage().getName())
+                    || "java.math".equals(fieldComponentType.getPackage().getName())
+                    || "java.sql".equals(fieldComponentType.getPackage().getName())
+                    || "java.util".equals(fieldComponentType.getPackage().getName())) {
+                return true;
+            }
+            return false;
+        }else {
+            if (fieldType.isPrimitive() || fieldType.getPackage() == null
+                    || "java.lang".equals(fieldType.getPackage().getName())
+                    || "java.math".equals(fieldType.getPackage().getName())
+                    || "java.sql".equals(fieldType.getPackage().getName())
+                    || "java.util".equals(fieldType.getPackage().getName())) {
+                return true;
+            }
+            return false;
         }
-        return isBaseClass;
     }
 
     /**
